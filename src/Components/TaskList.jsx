@@ -70,7 +70,15 @@ const TaskList = () => {
 
   const handleBulkDelete = () => {
     selectedTasks.forEach((taskId) => dispatch(deleteTask(taskId)));
-    setSelectedTasks([]);
+    setSelectedTasks([]); 
+  };
+
+  const handleSelectAll = () => {
+    if (selectedTasks.length === tasks.length) {
+      setSelectedTasks([]);
+    } else {
+      setSelectedTasks(tasks.map((task) => task.id));
+    }
   };
 
   const visibleTasks =
@@ -84,32 +92,39 @@ const TaskList = () => {
         Task List
       </Typography>
 
+
       {userRole === "admin" && (
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Add />}
-          sx={{ mb: 2 }}
-          onClick={() => navigate("/task")}
-        >
-          Add Task
-        </Button>
+  <>
+    <Button
+      variant="contained"
+      color="primary"
+      startIcon={<Add />}
+      sx={{ mb: 2 }}
+      onClick={() => navigate("/task")}
+    >
+      Add Task
+    </Button>
 
+    <Button
+      variant="contained"
+      color="black"
+      startIcon={<DeleteForeverIcon />}
+      onClick={handleBulkDelete}
+      sx={{ mb: 2, ml: 2, borderColor: "black" }}
+    >
+      Delete Selected Tasks
+    </Button>
 
-        
-      )}
-
-      {selectedTasks.length > 0 && (
-        <Button
-          variant="contained"
-          color="black"
-          startIcon={<DeleteForeverIcon/>}
-          onClick={handleBulkDelete}
-          sx={{ mb: 2 , ml: 2 , borderColor: "black" }}
-        >
-          Delete Selected Tasks
-        </Button>
-      )}
+    <Button
+      variant="outlined"
+      color="primary"
+      onClick={handleSelectAll}
+      sx={{ mb: 2, borderColor: "black", padding: 0.5, ml: 1 }}
+    >
+      {selectedTasks.length === tasks.length ? "Unselect All" : "Select All"}
+    </Button>
+  </>
+)}
 
       {!visibleTasks.length ? (
         <Typography variant="h6" sx={{ mt: 4, textAlign: "center" }}>
@@ -121,7 +136,7 @@ const TaskList = () => {
             <React.Fragment key={task.id}>
               <ListItem button onClick={() => toggleExpand(task.id)}>
                 {userRole === "admin" && (
-                    <Checkbox
+                  <Checkbox
                     edge="start"
                     checked={selectedTasks.includes(task.id)}
                     onClick={(e) => e.stopPropagation()}
@@ -129,7 +144,6 @@ const TaskList = () => {
                     sx={{ mr: 2 }}
                   />
                 )}
-               
 
                 <IconButton edge="start">
                   {expandedTaskId === task.id ? <ExpandLess /> : <ExpandMore />}
@@ -218,3 +232,4 @@ const TaskList = () => {
 };
 
 export default TaskList;
+
